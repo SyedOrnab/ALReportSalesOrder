@@ -4,9 +4,24 @@ reportextension 50115 SalesRepo extends "Standard Sales - Order Conf."
     {
         add(Header)
         {
-            column(SalesMessage; SalesMessage){}
-            column(PhoneNo;Cus."Phone No."){}
-            column(CusAddress;Cus.Address){}
+            column(SalesMessage; SalesMessage) { }
+            column(PhoneNo; "Sell-to Phone No.") { }
+            column(Address; "Bill-to Address") { }
+        }
+        add(Line)
+        {
+            column(Tax; Tax) { }
+        }
+        add(Totals)
+        {
+            column(TotalTax; TotalTax) { }
+        }
+        modify(Line)
+        {
+            trigger OnAfterAfterGetRecord()
+            begin
+                TotalTax += Tax;
+            end;
         }
     }
     rendering
@@ -16,10 +31,13 @@ reportextension 50115 SalesRepo extends "Standard Sales - Order Conf."
             Type = Word;
             LayoutFile = 'SalesRepo.docx';
         }
+
     }
     var
         SalesMessage: Label 'Sales Message';
-        Cus : Record Customer;	
-        "Phone No.": Text[30];
+        // Cus : Record Customer;	
+        // "Phone No.": Text[30];
         Address: text[100];
+        PhoneNo: Text[30];
+        TotalTax: Decimal;
 }
